@@ -18,11 +18,23 @@ socket.on('connect', function() {
     socket.emit('join');
 });
 
+socket.on('disconnect', function() {
+    console.log('Socket.io server disconnected ');
+});
+
 socket.on('id', function(d) {
     Respeer.userName = d.name;
-    Respeer.sid = d.sid;
     Respeer.app.setUserName(Respeer.userName);
 });
+
+socket.on('join', function(d) {
+    Respeer.newUser(d.name);
+});
+
+socket.on('leave', function(d) {
+    Respeer.delUser(d.name);
+});
+/*
 
 socket.on('hello', function(d) {
     Respeer.newUser(d.sid, d.name, "");
@@ -57,9 +69,7 @@ socket.on('hello', function(d) {
     }
 });
 
-socket.on('bye', function(d) {
-    Respeer.delUser(d.sid);
-});
+
 
 socket.on('helloFrom', function(d) {
     if (Respeer.userExists(d.sid)) {
@@ -95,9 +105,6 @@ socket.on('helloFrom', function(d) {
         Respeer.updateUser(d.sid, {p: p});
 
     }
-});
-
-socket.on('disconnect', function() {
-    console.log('Socket.io server disconnected ');
 
 });
+  */

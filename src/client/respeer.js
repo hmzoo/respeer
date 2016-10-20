@@ -8,21 +8,21 @@ var ctl = {
     select:function(i){
       this.app.select(i);
     },
-    userExists:function(sid){
-      return this.datas.exists(sid);
+    userExists:function(name){
+      return this.datas.exists(name);
     },
-    newUser:function(sid,name,content){
-      this.datas.add(sid,{name:name,sid:sid,content:content})
+    newUser:function(name){
+      this.datas.add(name,{name:name,linked:false})
     },
-    delUser:function(sid){
-      this.datas.del(sid);
+    delUser:function(name){
+      this.datas.del(name);
     },
-    updateUser:function(sid,data){
-      this.datas.set(sid,data);
+    updateUser:function(name,data){
+      this.datas.set(name,data);
     },
-    getPeer:function(sid){
-      if(this.userExists(sid)){
-        return this.datas.get(sid).p;
+    getPeer:function(){
+      if(this.userExists(name)){
+        return this.datas.get(name).p;
       }else{
         return null;
       }

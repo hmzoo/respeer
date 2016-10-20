@@ -7,14 +7,27 @@ var Item = React.createClass({
         Respeer.select(this.props.index);
     },
     render: function() {
-      var UserName=(<b>{this.props.name}</b>);
-      if(this.props.isuser){UserName=(<b className='fz++'>[{this.props.name}]</b>)}
+        var UserName = (
+            <b>{this.props.name}</b>
+        );
+        if (this.props.isuser) {
+            UserName = (
+                <b className='fz++'>[{this.props.name}]</b>
+            )
+        }
+        var linked = this.props.linked
+            ? (
+                <i>linked</i>
+            )
+            : (
+                <i>not linked</i>
+            );
         return (
 
             <div className="grid-item 2/12">
                 <div className="box" onClick={this.clicked}>
-                    {UserName}<br/>
-                    <i className='fz--'>{this.props.sid}</i><br/>{this.props.content}</div>
+                    {UserName}<br/> {linked}<br/>
+                    <br/>{this.props.content}</div>
             </div>
 
         );
@@ -54,7 +67,7 @@ var ItemForm = React.createClass({
                 <div className="box">
                     <span className="fr" onClick={this.delClicked}>{'\u274C'}</span>
                     <b>{this.props.name}</b><br/>
-                    <i className='fz--'>{this.props.sid}</i><br/>
+
                     <form action="" onSubmit={this.handleSubmit}>
                         <input className="form-input" ref="itemInput" type="text" value={this.state.inputValue} onChange={this.onChangeInput}></input>
                     </form>
@@ -76,9 +89,9 @@ module.exports = React.createClass({
             <div id="datalist" className="bord">
                 {this.props.items.map(function(result, index) {
                     if (this.props.selected === index) {
-                        return (<ItemForm key={result.id} isuser={result.name==this.props.user} name={result.name} sid={result.sid} content={result.content} index={index}/>);
+                        return (<ItemForm key={result.id} isuser={result.name == this.props.user} name={result.name} content={result.content} index={index}/>);
                     } else {
-                        return (<Item key={result.id} isuser={result.name==this.props.user} name={result.name} sid={result.sid} content={result.content} index={index}/>);
+                        return (<Item key={result.id} isuser={result.name == this.props.user} name={result.name} content={result.content} linked={result.linked} index={index}/>);
                     }
                 }, this)}
             </div>

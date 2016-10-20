@@ -16,16 +16,13 @@ module.exports = React.createClass({
         this.setState({selected: i,infos:'selected :'+i.toString()});
       }else{this.setState({selected: i,infos:'no selection'});}
     },
-    newItem:function(){
-      Respeer.newItem((Math.floor(Math.random() * 90000) + 10000).toString(),'content here ...')
-    },
 
     render: function() {
 
         return (
             <div>
               <div>ID : {this.state.userName}</div>
-                <button className='btn m' onClick={this.newItem}>ADD</button>
+
                 <div>{this.state.infos}</div>
                 <DataList items={this.state.items} selected={this.state.selected} user={this.state.userName}/>
             </div>
