@@ -4,7 +4,7 @@ var Item = React.createClass({
 
     clicked: function() {
 
-        Respeer.select(this.props.index);
+        Respeer.select(this.props.name);
     },
     render: function() {
         var UserName = (
@@ -36,7 +36,7 @@ var Item = React.createClass({
 
 var ItemForm = React.createClass({
     getInitialState: function() {
-        return {inputValue: this.props.content};
+        return {inputValue: ''};
     },
     delClicked: function() {
 
@@ -55,18 +55,31 @@ var ItemForm = React.createClass({
     handleSubmit: function(e) {
         e.preventDefault();
         e.stopPropagation();
-        Respeer.updateItem(this.props.name, {content: this.state.inputValue});
-        Respeer.select(null);
+        Respeer.sendMsg(this.props.name, this.state.inputValue);
+        this.setState({inputValue: ''});
+        //Respeer.select(null);
         //this.props.onSubmit(this.state.inputValue.trim());
         //this.setState({inputValue: ''});
     },
     render: function() {
+        var linked = this.props.linked
+            ? (
+                <i>linked</i>
+            )
+            : (
+                <i>not linked</i>
+            );
         return (
 
             <div className="grid-item 3/12">
                 <div className="box">
                     <span className="fr" onClick={this.delClicked}>{'\u274C'}</span>
-                    <b>{this.props.name}</b><br/>
+                    <b>{this.props.name}</b><br/> {linked}<br/>
+                    <br/>{this.props.content}<br/>
+                    <div>
+                        {this.props.messages.map(function(result,index) {
+                            return (<i key={index} className='db'>{result}</i>)
+                        }, this)}</div>
 
                     <form action="" onSubmit={this.handleSubmit}>
                         <input className="form-input" ref="itemInput" type="text" value={this.state.inputValue} onChange={this.onChangeInput}></input>
@@ -88,10 +101,10 @@ module.exports = React.createClass({
 
             <div id="datalist" className="bord">
                 {this.props.items.map(function(result, index) {
-                    if (this.props.selected === index) {
-                        return (<ItemForm key={result.id} isuser={result.name == this.props.user} name={result.name} content={result.content} index={index}/>);
+                    if (this.props.selected == result.name) {
+                        return (<ItemForm key={result.id} isuser={result.name == this.props.user} name={result.name} content={result.content} messages={result.messages} linked={result.linked} index={index}/>);
                     } else {
-                        return (<Item key={result.id} isuser={result.name == this.props.user} name={result.name} content={result.content} linked={result.linked} index={index}/>);
+                        return (<Item key={result.id} isuser={result.name == this.props.user} name={result.name} content={result.content} messages={result.messages} linked={result.linked} index={index}/>);
                     }
                 }, this)}
             </div>

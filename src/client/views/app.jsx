@@ -11,10 +11,10 @@ module.exports = React.createClass({
     setDatas: function(datas) {
         this.setState({items: datas});
     },
-    select: function(i) {
-      if(i!=null){
-        this.setState({selected: i,infos:'selected :'+i.toString()});
-      }else{this.setState({selected: i,infos:'no selection'});}
+    select: function(name) {
+      if(name!=null){
+        this.setState({selected: name,infos:'selected :'+name});
+      }else{this.setState({selected: name,infos:'no selection'});}
     },
 
     render: function() {

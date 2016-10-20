@@ -29,13 +29,58 @@ socket.on('id', function(d) {
 
 socket.on('join', function(d) {
     Respeer.newUser(d.name);
+    if(d.name!=Respeer.userName){
+    newPeer(d.name,true);
+  }
 });
 
 socket.on('leave', function(d) {
     Respeer.delUser(d.name);
 });
-/*
 
+socket.on('peerSignal', function(d) {
+console.log("peerSignal",d,Respeer.getPeer(d.from));
+    if (Respeer.getPeer(d.from)) {
+
+      Respeer.getPeer(d.from).signal(d.signal);
+    }else{
+      Respeer.newUser(d.from);
+      newPeer(d.from,false);
+      Respeer.getPeer(d.from).signal(d.signal);
+    }
+});
+
+var newPeer = function(name,init) {
+  console.log("new peer",name,Respeer.getPeer(name),init);
+    if (!Respeer.getPeer(name)) {
+
+        var p = new Peer({initiator: init, trickle: false});
+        p.on('error', function(err) {
+            console.log('error', err)
+        });
+        p.on('signal', function(data) {
+            socket.emit('peerSignal', {
+                to: name,
+                signal: data
+            });
+
+        });
+        p.on('connect', function() {
+            console.log('CONNECT');
+            Respeer.updateUser(name, {linked: true});
+            p.send('whatever ' + Math.random());
+        })
+
+        p.on('data', function(data) {
+          Respeer.newMsg(name,data.toString());
+            console.log('data: ' + data);
+        })
+        Respeer.updateUser(name, {p: p});
+        console.log("getPeer",Respeer.getPeer(name));
+
+    }
+}
+/*
 socket.on('hello', function(d) {
     Respeer.newUser(d.sid, d.name, "");
     if (d.sid != Respeer.sid) {
