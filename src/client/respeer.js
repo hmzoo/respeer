@@ -40,23 +40,24 @@ var ctl = {
             return null;
         }
     },
-    sendMsg: function(name, text) {
+    sendMsg: function(name,data) {
         if (this.getPeer(name)) {
-            this.newMsg(name, text);
-            this.getPeer(name).sendMsg(text);
+          data.user=this.userName;
+          var m = this.datas.get(name).messages.concat([data]);
+          this.updateUser(name, {messages: m});
+          this.getPeer(name).sendMsg(data);
         }
     },
-    newMsg: function(name, text) {
-        console.log(text);
+    newMsg: function(name, data) {
         if (this.getUser(name)) {
-            var m = this.getUser(name).messages.concat([text]);
-
+            data.user=name;
+            var m = this.datas.get(name).messages.concat([data]);
             this.updateUser(name, {messages: m});
 
         }
     },
     initPeer: function(name,init) {
-      
+
         if (!this.getPeer(name)) {
 
             var evt={}
@@ -64,6 +65,7 @@ var ctl = {
                 Respeer.updateUser(name, {linked: true});
             };
             evt.onClose = function() {
+              console.log("closed");
               Respeer.updateUser(name, {linked: false});
               if (Respeer.userExists(name)) {
                   delete Respeer.datas.get(name).p;
@@ -75,8 +77,9 @@ var ctl = {
                     signal: data
                 });
             };
-            evt.onMsg = function(content) {
-                Respeer.newMsg(name, content);
+            evt.onMsg = function(data) {
+              console.log(data);
+                Respeer.newMsg(name, data);
             };
             var p = new MPeer(init,evt);
             this.updateUser(name, {p: p});

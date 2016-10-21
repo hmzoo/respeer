@@ -39,8 +39,9 @@ module.exports = function(init, evt) {
         } catch (err) {
             console.error(err.message)
         }
-        if ((data.type == 'msg') && data.content) {
-            self.onMsg(data.content);
+        console.log(data);
+        if ((data.type == 'msg') && data.data) {
+            self.onMsg(data.data);
         }
     };
     self.p.on('error', self.close);
@@ -48,15 +49,15 @@ module.exports = function(init, evt) {
     self.p.on('signal', self.onSignal);
     self.p.on('connect', self.onConnect);
     self.p.on('close', self.close);
-    self.p.on('end', self.close);
+    //self.p.on('end', self.close);
     self.p.on('data', self.onData);
     self.onMsg = evt.onMsg
         ? evt.onMsg
         : function(content) {
             console.log("msg " + content);
         };
-    self.sendMsg = function(content) {
-        self.p.send(JSON.stringify({type: 'msg', content: content}));
+    self.sendMsg = function(data) {
+        self.p.send(JSON.stringify({type: 'msg', data: data}));
     };
 
 }

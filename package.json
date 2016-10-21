@@ -30,10 +30,12 @@
     "bluebird": "^3.4.6",
     "cfenv": "^1.0.3",
     "dotenv": "^2.0.0",
+    "drag-drop": "^2.12.1",
     "express": "^4.14.0",
     "helmet": "^2.3.0",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
+    "react-file-drop": "^0.1.8",
     "redis": "^2.6.2",
     "simple-peer": "^6.0.7"
   }
