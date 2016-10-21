@@ -3,14 +3,13 @@ var Peer = require('simple-peer');
 module.exports = function(init, evt) {
     var self = this;
 
-    self.p = new Peer({initiator: init, trickle: false});
+    self.p = new Peer({initiator: init, trickle: false,reconnectTimer:1000});
 
     self.close = function() {
         self.p.removeListener('error', self.close);
         self.p.removeListener('signal', self.onSignal)
         self.p.removeListener('connect', self.onConnect);
         self.p.removeListener('close', self.close);
-        self.p.removeListener('end', self.close);
         self.p.removeListener('data', self.onData);
         self.p.destroy();
         self.onClose();
@@ -49,7 +48,6 @@ module.exports = function(init, evt) {
     self.p.on('signal', self.onSignal);
     self.p.on('connect', self.onConnect);
     self.p.on('close', self.close);
-    self.p.on('end', self.close);
     self.p.on('data', self.onData);
     self.onMsg = evt.onMsg
         ? evt.onMsg

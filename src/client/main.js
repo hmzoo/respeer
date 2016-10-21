@@ -29,6 +29,7 @@ socket.on('id', function(d) {
 });
 
 socket.on('join', function(d) {
+    console.log('user join');
     Respeer.newUser(d.name);
     if (d.name != Respeer.userName) {
         Respeer.initPeer(d.name, true);
@@ -44,7 +45,9 @@ socket.on('peerSignal', function(d) {
     if (Respeer.getPeer(d.from)) {
         Respeer.getPeer(d.from).signal(d.signal);
     } else {
-        Respeer.newUser(d.from);
+        if (!Respeer.getUser(d.from)) {
+            Respeer.newUser(d.from);
+        }
         Respeer.initPeer(d.from, false);
         Respeer.getPeer(d.from).signal(d.signal);
     }

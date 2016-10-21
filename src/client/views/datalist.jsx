@@ -55,6 +55,7 @@ var ItemForm = React.createClass({
                 var t = (file.type).split('/')[0].toLowerCase();
                 if (t == 'image') {
                     var src = "data:" + file.type + ";base64," + file.toString('base64');
+                    console.log(src);
                     Respeer.sendMsg(self.props.name, {
                         type: 'image',
                         content: src

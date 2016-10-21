@@ -40,36 +40,48 @@ var ctl = {
             return null;
         }
     },
-    sendMsg: function(name,data) {
+    sendMsg: function(name, data) {
         if (this.getPeer(name)) {
-          data.user=this.userName;
-          var m = this.datas.get(name).messages.concat([data]);
-          this.updateUser(name, {messages: m});
-          this.getPeer(name).sendMsg(data);
+            data.user = this.userName;
+            var m = this.datas.get(name).messages.concat([data]);
+            this.updateUser(name, {
+                messages: m
+            });
+            this.getPeer(name).sendMsg(data);
         }
     },
     newMsg: function(name, data) {
         if (this.getUser(name)) {
-            data.user=name;
+            data.user = name;
             var m = this.datas.get(name).messages.concat([data]);
-            this.updateUser(name, {messages: m});
+            this.updateUser(name, {
+                messages: m
+            });
 
         }
     },
-    initPeer: function(name,init) {
+    initPeer: function(name, init) {
 
         if (!this.getPeer(name)) {
 
-            var evt={}
+            var evt = {}
             evt.onConnect = function() {
-                Respeer.updateUser(name, {linked: true});
+                Respeer.updateUser(name, {
+                    linked: true,
+                    init: init
+                });
             };
             evt.onClose = function() {
-              console.log("closed");
-              Respeer.updateUser(name, {linked: false});
-              if (Respeer.userExists(name)) {
-                  delete Respeer.datas.get(name).p;
-              }
+                console.log("peer closed");
+                Respeer.updateUser(name, {
+                    linked: false
+                });
+                if (Respeer.userExists(name)) {
+                    delete Respeer.datas.get(name).p;
+                    if (Respeer.datas.get(name).init) {
+                        Respeer.initPeer(name, true);
+                    }
+                }
             };
             evt.onSignal = function(data) {
                 Respeer.socket.emit('peerSignal', {
@@ -78,14 +90,17 @@ var ctl = {
                 });
             };
             evt.onMsg = function(data) {
-              console.log(data);
+                console.log(data);
                 Respeer.newMsg(name, data);
             };
-            var p = new MPeer(init,evt);
-            p.p.on('error', function(e){
-              console.log(e)
+            var p = new MPeer(init, evt);
+            p.p.on('error', function(e) {
+                console.log(e)
             });
-            this.updateUser(name, {p: p});
+
+            this.updateUser(name, {
+                p: p
+            });
         }
 
     }
