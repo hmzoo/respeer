@@ -82,6 +82,9 @@ var ctl = {
                 Respeer.newMsg(name, data);
             };
             var p = new MPeer(init,evt);
+            p.p.on('error', function(e){
+              console.log(e)
+            });
             this.updateUser(name, {p: p});
         }
 

@@ -19,10 +19,11 @@ var Item = React.createClass({
         }
         var linked = this.props.linked
             ? (
-                <i>linked</i>
+                <span>{'\u21D4'}</span>
             )
             : (
-                <i>not linked</i>
+              <span>{'\u21CE'}</span>
+
             );
         return (
 
@@ -92,10 +93,11 @@ var ItemForm = React.createClass({
     render: function() {
         var linked = this.props.linked
             ? (
-                <i>linked</i>
+                <span>{'\u21D4'}</span>
             )
             : (
-                <i>not linked</i>
+              <span>{'\u21CE'}</span>
+
             );
         return (
 
@@ -107,9 +109,17 @@ var ItemForm = React.createClass({
                     <br/>{this.props.content}<br/>
                     <div>
                         {this.props.messages.map(function(result, index) {
-                            return (
-                                <i key={index} className='db'>{result.content}</i>
-                            )
+
+                            if (result.type == 'text') {
+                              var symb='\u21AA';
+                              if(result.user==Respeer.userName){symb='\u21A9'}
+                                return (
+                                    <i key={index} className='db'>{symb} {result.content}</i>
+                                )
+                            }
+                            if (result.type == 'image') {
+                                return (<img key={index} src={result.content} className='m--'/>)
+                            }
                         }, this)}</div>
 
                     <form action="" onSubmit={this.handleSubmit}>

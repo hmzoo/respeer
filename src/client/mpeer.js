@@ -49,7 +49,7 @@ module.exports = function(init, evt) {
     self.p.on('signal', self.onSignal);
     self.p.on('connect', self.onConnect);
     self.p.on('close', self.close);
-    //self.p.on('end', self.close);
+    self.p.on('end', self.close);
     self.p.on('data', self.onData);
     self.onMsg = evt.onMsg
         ? evt.onMsg
